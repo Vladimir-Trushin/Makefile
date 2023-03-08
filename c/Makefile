@@ -35,13 +35,13 @@ create:
 	@mkdir -p build
 
 build: $(C_OBJECTS)
-	$(C_COMPILER_CALL) $(C_OBJECTS) $(LDFLAGS) -o $(BUILD_DIR)/$(EXECUTABLE_NAME)
+	$(C_COMPILER_CALL) $^ $(LDFLAGS) -o $(BUILD_DIR)/$(EXECUTABLE_NAME)
 
 execute:
 	@./$(BUILD_DIR)/$(EXECUTABLE_NAME)
 
 clean:
-	@rm -r $(BUILD_DIR)
+	@rm -rf $(BUILD_DIR)
 
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c

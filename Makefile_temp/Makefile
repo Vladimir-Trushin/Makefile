@@ -22,7 +22,7 @@
 
 
 
-DEBUG ?= 1 # ?= user can change this variable
+DEBUG ?= 1                # ?= user can change this variable
 EXECUTABLE_NAME ?= main
 ENABLE_WARNINGS ?= 1
 CXX_STANDARD ?= c++20
@@ -50,7 +50,7 @@ endif
 
 CXX_COMPILER_CALL = $(CXX) $(CXXFLAGS) $(INCLUDE_FLAGS)
 
-CXX_SOURCES = $(wildcard $(SOURCE_DIR)/*.cpp) # create list of targets
+CXX_SOURCES = $(wildcard $(SOURCE_DIR)/*.cpp)       # create list of targets
 # change directory and extension of the all files in the list
 CXX_OBJECTS = $(patsubst $(SOURCE_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(CXX_SOURCES))
 
@@ -58,18 +58,19 @@ all: create build
 
 
 create:
-	@mkdir -p build # @ don't show this command in the terminal
+	@mkdir -p build                               # @ don't show this command in the terminal
+	#@cd $(BUILD_DIR) && mkdir -p test             # make directory in directory
 
 build: $(CXX_OBJECTS)
 	$(CXX_COMPILER_CALL) $(CXX_OBJECTS) $(LDFLAGS) -o $(BUILD_DIR)/$(EXECUTABLE_NAME)
 
 execute:
-	./$(BUILD_DIR)/$(EXECUTABLE_NAME)
+	@./$(BUILD_DIR)/$(EXECUTABLE_NAME)
 
 clean:
-	#rm $(BUILD_DIR)/*.o
-	#rm $(BUILD_DIR)/$(EXECUTABLE_NAME)
-	rm -r $(BUILD_DIR)
+	#rm -f $(BUILD_DIR)/*.o
+	#rm -f $(BUILD_DIR)/$(EXECUTABLE_NAME)
+	@rm -rf $(BUILD_DIR)     # -r recursive and -f check if it exists file or directory
 
 
 # $@: the file name of the target
@@ -81,4 +82,4 @@ clean:
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp
 	$(CXX_COMPILER_CALL) -c $< -o $@
 
-.PHONY: all create build execute clean # it's not files
+.PHONY: all create build execute clean         # it's not files
