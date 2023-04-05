@@ -1,8 +1,10 @@
 APP_NAME := main
-CC := gcc
+CC := g++
+EXTENSION := .cpp
 DEBUG := 1
 COMPILE_FLAGS_RELEACE := -O3
 COMPILE_FLAGS_DEBUG := -O0 -g -Wall -Wextra
+
 SOURCE_DIRS := $(shell find . -type d)
 
 
@@ -28,8 +30,8 @@ BUILD_DIR := release
 endif
 
 
-SOURCES := $(addsuffix /*.c, $(SOURCE_DIRS))
-SOURCES := $(notdir $(patsubst %.c, %.o, $(wildcard $(SOURCES))))
+SOURCES := $(addsuffix /*$(EXTENSION), $(SOURCE_DIRS))
+SOURCES := $(notdir $(patsubst %$(EXTENSION), %.o, $(wildcard $(SOURCES))))
 BUILD_SOURCES := $(addprefix build/$(BUILD_DIR)/objects/, $(SOURCES))
 INCLUDE_DIRS := $(addprefix -I , $(SOURCE_DIRS))
 
@@ -37,11 +39,11 @@ INCLUDE_DIRS := $(addprefix -I , $(SOURCE_DIRS))
 VPATH := $(SOURCE_DIRS)
 
 
-$(APP_NAME): $(SOURCES)
-	$(CC) $(BUILD_SOURCES) -o build/$(BUILD_DIR)/app/$@
+build/$(BUILD_DIR)/app/$(APP_NAME): $(BUILD_SOURCES)
+	$(CC) $(BUILD_SOURCES) -o $@
 
-%.o: %.c
-	$(CC) -c -MMD $(INCLUDE_DIRS) $(COMPILE_FLAGS) $< -o build/$(BUILD_DIR)/objects/$@
+build/$(BUILD_DIR)/objects/%.o: %$(EXTENSION)
+	$(CC) -c -MMD $(INCLUDE_DIRS) $(COMPILE_FLAGS) $< -o $@
 
 include $(wildcard build/$(BUILD_DIR)/objects/*.d)
 
@@ -55,11 +57,11 @@ clean_debug:
 clean_release:
 	@rm -rf build/release
 
-d:
+run_debug:
 	@./build/debug/app/$(APP_NAME)
 
-r:
+run_release:
 	@./build/release/app/$(APP_NAME)
 
-.PHONY: clean clean_debug clean_release d r
+.PHONY: clean clean_debug clean_release run_debug run_release
 
